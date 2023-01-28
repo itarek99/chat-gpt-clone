@@ -13,3 +13,24 @@ const loader = (element) => {
     }
   }, 300);
 };
+
+const typeText = (element, text) => {
+  let index = 0;
+  let interval = setInterval(() => {
+    if (index < text.length) {
+      element.innerHTML += text.charAt(index);
+      index++;
+    } else {
+      clearInterval(interval);
+    }
+  }, 20);
+};
+
+const generateUniqueId = () => {
+  const timeStamp = Date.now();
+  const randomNumber = Math.random();
+  const hexadecimalString = randomNumber.toString(16);
+  return `id-${timeStamp}-${hexadecimalString}`;
+};
+
+console.log(generateUniqueId());
