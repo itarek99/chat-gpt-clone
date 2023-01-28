@@ -1,3 +1,6 @@
+import bot from './assets/bot.svg';
+import user from './assets/user.svg';
+
 const form = document.querySelector('form');
 const chatContainer = document.querySelector('#chat_container');
 
@@ -33,4 +36,36 @@ const generateUniqueId = () => {
   return `id-${timeStamp}-${hexadecimalString}`;
 };
 
-console.log(generateUniqueId());
+const chatStripe = (isAi, value, uniqueId) => {
+  return `
+      <div class='warper ${isAi && 'ai'}'>
+        <div class='chat'>
+          <div class='profile'>
+            <img src=${isAi ? bot : user} alt=${isAi ? 'bot' : 'user'}/>
+          </div>
+          <div class='message' id=${uniqueId}>${value}</div>
+        </div>
+      </div>
+    `;
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const data = new FormData(form);
+  chatContainer.innerHTML += chatStripe(false, data.get('prompt'));
+  form.reset();
+
+  const uniqueId = generateUniqueId();
+  chatContainer.innerHTML += chatStripe(true, '', uniqueId);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+  const messageDiv = document.getElementById(uniqueId);
+  loader(messageDiv);
+};
+
+form.addEventListener('submit', handleSubmit);
+form.addEventListener('keyup', (e) => {
+  if (e.keyCode === 13) {
+    handleSubmit(e);
+  }
+});
